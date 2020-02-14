@@ -1,7 +1,32 @@
-# This only exists so that we can include pedantic in the top level
-# analysis_options.yaml. Each plugin should be published from its own
-# subdirectory underneath packages/.
-name: flutterfire_plugins
+name: huawei_admob
+description: Flutter plugin for Firebase AdMob modified for HMS
+homepage: https://github.com/calinrugina/flutterfire
+version: 0.0.1
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.firebaseadmob
+        pluginClass: FirebaseAdMobPlugin
+      ios:
+        pluginClass: FLTFirebaseAdMobPlugin
+
+dependencies:
+  meta: ^1.0.4
+  platform: ^2.0.0
+  flutter:
+    sdk: flutter
+  firebase_core: ^0.4.2+1
+
 dev_dependencies:
-  pedantic: 1.8.0
-publish_to: none
+  e2e: ^0.2.1
+  flutter_driver:
+    sdk: flutter
+  mockito: ^3.0.0
+  flutter_test:
+    sdk: flutter
+
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  flutter: ">=1.10.0 <2.0.0"

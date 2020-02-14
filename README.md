@@ -1,119 +1,205 @@
-# FlutterFire
+# firebase_admob
 
-[![Build Status](https://api.cirrus-ci.com/github/FirebaseExtended/flutterfire.svg)](https://cirrus-ci.com/github/FirebaseExtended/flutterfire/master)
+A plugin for [Flutter](https://flutter.io) that supports loading and
+displaying banner, interstitial (full-screen), and rewarded video ads using the
+[Firebase AdMob API](https://firebase.google.com/docs/admob/).
 
-FlutterFire is a set of [Flutter plugins](https://flutter.io/platform-plugins/)
-that enable Flutter apps to use [Firebase](https://firebase.google.com/) services. You can follow an example that shows how to use these plugins in the [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html#0) codelab.
+For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
-[Flutter](https://flutter.dev) is Google’s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase. Flutter is used by developers and organizations around the world, and is free and open source.
+## AndroidManifest changes
 
-*Note*: FlutterFire is still under development, and some APIs and platforms might not be available yet.
-[Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
+AdMob 17 requires the App ID to be included in the `AndroidManifest.xml`. Failure
+to do so will result in a crash on launch of your app.  The line should look like:
 
-## Available FlutterFire plugins
+```xml
+<meta-data
+    android:name="com.google.android.gms.ads.APPLICATION_ID"
+    android:value="[ADMOB_APP_ID]"/>
+```
 
-| Plugin | Version | Firebase feature | Source code | Web? |
-|---|---|---|---|---|
-| [cloud_firestore][firestore_pub] | ![pub package][firestore_badge] | [Cloud Firestore][firestore_product] | [`cloud_firestore`][firestore_code] | <img src="https://user-images.githubusercontent.com/394889/70172910-9174c880-1686-11ea-8e2e-3d8c1cc78cce.png" alt="hummingbird" width="25"> |
-| [cloud_functions][functions_pub] | ![pub package][functions_badge] | [Cloud Functions][functions_product] | [`cloud_functions`][functions_code] | <img src="https://user-images.githubusercontent.com/394889/70172910-9174c880-1686-11ea-8e2e-3d8c1cc78cce.png" alt="hummingbird" width="25"> |
-| [firebase_admob][admob_pub] | ![pub package][admob_badge] | [Firebase AdMob][admob_product] | [`firebase_admob`][admob_code] | |
-| [firebase_analytics][analytics_pub] | ![pub package][analytics_badge] | [Firebase Analytics][analytics_product] | [`firebase_analytics`][analytics_code] | |
-| [firebase_auth][auth_pub] | ![pub package][auth_badge] | [Firebase Authentication][auth_product] | [`firebase_auth`][auth_code] | <img src="https://user-images.githubusercontent.com/394889/70172910-9174c880-1686-11ea-8e2e-3d8c1cc78cce.png" alt="hummingbird" width="25"> |
-| [firebase_core][core_pub] | ![pub package][core_badge] | [Firebase Core][core_product] | [`firebase_core`][core_code] | <img src="https://user-images.githubusercontent.com/394889/70172910-9174c880-1686-11ea-8e2e-3d8c1cc78cce.png" alt="hummingbird" width="25"> |
-| [firebase_crashlytics][crash_pub] | ![pub package][crash_badge] | [Firebase Crashlytics][crash_product] | [`firebase_crashlytics`][crash_code] | |
-| [firebase_database][database_pub] | ![pub package][database_badge] | [Firebase Realtime Database][database_product] | [`firebase_database`][database_code] | |
-| [firebase_dynamic_links][dynamic_links_pub] | ![pub package][dynamic_links_badge] | [Firebase Dynamic Links][dynamic_links_product] | [`firebase_dynamic_links`][dynamic_links_code] | |
-| [firebase_in_app_messaging][in_app_messaging_pub] | ![pub package][in_app_messaging_badge] | [Firebase In-App Messaging][in_app_messaging_product] | [`firebase_in_app_messaging`][in_app_messaging_code] | |
-| [firebase_messaging][messaging_pub] | ![pub package][messaging_badge] | [Firebase Cloud Messaging][messaging_product] | [`firebase_messaging`][messaging_code] | |
-| [firebase_ml_vision][ml_vision_pub] | ![pub package][ml_vision_badge] | [Firebase ML Kit][ml_vision_product] | [`firebase_ml_vision`][ml_vision_code] | |
-| [firebase_performance][performance_pub] | ![pub package][performance_badge] | [Firebase Performance Monitoring][performance_product] | [`firebase_performance`][performance_code] | |
-| [firebase_remote_config][remote_config_pub] | ![pub package][remote_config_badge] | [Firebase Remote Config][remote_config_product] | [`firebase_remote_config`][remote_config_code] | |
-| [firebase_storage][storage_pub] | ![pub package][storage_badge] | [Firebase Cloud Storage][storage_product] | [`firebase_storage`][storage_code] | |
+where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you 
+initialize the plugin in your Dart code.
 
-[admob_pub]: https://pub.dartlang.org/packages/firebase_admob
-[admob_product]: https://firebase.google.com/docs/admob/
-[admob_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob
-[admob_badge]: https://img.shields.io/pub/v/firebase_admob.svg
+See https://goo.gl/fQ2neu for more information about configuring `AndroidManifest.xml`
+and setting up your App ID.
 
-[analytics_pub]: https://pub.dartlang.org/packages/firebase_analytics
-[analytics_product]: https://firebase.google.com/products/analytics/
-[analytics_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics
-[analytics_badge]: https://img.shields.io/pub/v/firebase_analytics.svg
+## Info.plist changes
 
-[auth_pub]: https://pub.dartlang.org/packages/firebase_auth
-[auth_product]: https://firebase.google.com/products/auth/
-[auth_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth
-[auth_badge]: https://img.shields.io/pub/v/firebase_auth.svg
+Admob 7.42.0 requires the App ID to be included in `Info.plist`. Failure to do so will result in a crash on launch of your app. The lines should look like:
 
-[core_pub]: https://pub.dartlang.org/packages/firebase_core
-[core_product]: https://firebase.google.com/
-[core_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core
-[core_badge]: https://img.shields.io/pub/v/firebase_core.svg
+```xml
+<key>GADApplicationIdentifier</key>
+<string>[ADMOB_APP_ID]</string>
+```
 
-[crash_pub]: https://pub.dartlang.org/packages/firebase_crashlytics
-[crash_product]: https://firebase.google.com/products/crashlytics/
-[crash_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_crashlytics
-[crash_badge]: https://img.shields.io/pub/v/firebase_crashlytics.svg
+where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you initialize the plugin in your Dart code.
 
-[database_pub]: https://pub.dartlang.org/packages/firebase_database
-[database_product]: https://firebase.google.com/products/database/
-[database_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_database
-[database_badge]: https://img.shields.io/pub/v/firebase_database.svg
+See https://developers.google.com/admob/ios/quick-start#update_your_infoplist for more information about configuring `Info.plist` and setting up your App ID.
 
-[dynamic_links_pub]: https://pub.dartlang.org/packages/firebase_dynamic_links
-[dynamic_links_product]: https://firebase.google.com/products/dynamic-links/
-[dynamic_links_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links
-[dynamic_links_badge]: https://img.shields.io/pub/v/firebase_dynamic_links.svg
+## Initializing the plugin
+The AdMob plugin must be initialized with an AdMob App ID.
 
-[firestore_pub]: https://pub.dartlang.org/packages/cloud_firestore
-[firestore_product]: https://firebase.google.com/products/firestore/
-[firestore_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore
-[firestore_badge]: https://img.shields.io/pub/v/cloud_firestore.svg
+```dart
+FirebaseAdMob.instance.initialize(appId: appId);
+```
+### Android
+Starting in version 17.0.0, if you are an AdMob publisher you are now required to add your AdMob app ID in your **AndroidManifest.xml** file. Once you find your AdMob app ID in the AdMob UI, add it to your manifest adding the following tag:
 
-[functions_pub]: https://pub.dartlang.org/packages/cloud_functions
-[functions_product]: https://firebase.google.com/products/functions/
-[functions_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions
-[functions_badge]: https://img.shields.io/pub/v/cloud_functions.svg
+```xml
+<manifest>
+    <application>
+        <!-- TODO: Replace with your real AdMob app ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-################~##########"/>
+    </application>
+</manifest>
+```
 
-[in_app_messaging_pub]: https://pub.dartlang.org/packages/firebase_in_app_messaging
-[in_app_messaging_product]: https://firebase.google.com/products/in-app-messaging/
-[in_app_messaging_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messaging
-[in_app_messaging_badge]: https://img.shields.io/pub/v/firebase_in_app_messaging.svg
+Failure to add this tag will result in the app crashing at app launch with a message starting with *"The Google Mobile Ads SDK was initialized incorrectly."*
 
-[messaging_pub]: https://pub.dartlang.org/packages/firebase_messaging
-[messaging_product]: https://firebase.google.com/products/cloud-messaging/
-[messaging_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging
-[messaging_badge]: https://img.shields.io/pub/v/firebase_messaging.svg
+On Android, this value must be the same as the App ID value set in your 
+`AndroidManifest.xml`.
 
-[ml_vision_pub]: https://pub.dartlang.org/packages/firebase_ml_vision
-[ml_vision_product]: https://firebase.google.com/products/ml-kit/
-[ml_vision_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_vision
-[ml_vision_badge]: https://img.shields.io/pub/v/firebase_ml_vision.svg
+### iOS
+Starting in version 7.42.0, you are required to add your AdMob app ID in your **Info.plist** file under the Runner directory. You can add it using Xcode or edit the file manually:
 
-[performance_pub]: https://pub.dartlang.org/packages/firebase_performance
-[performance_product]: https://firebase.google.com/products/performance/
-[performance_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
-[performance_badge]: https://img.shields.io/pub/v/firebase_performance.svg
+```xml
+<dict>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-################~##########</string>
+</dict>
+```
 
-[remote_config_pub]: https://pub.dartlang.org/packages/firebase_remote_config
-[remote_config_product]: https://firebase.google.com/products/remote-config/
-[remote_config_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config
-[remote_config_badge]: https://img.shields.io/pub/v/firebase_remote_config.svg
+Failure to add this tag will result in the app crashing at app launch with a message including *"GADVerifyApplicationID."*
 
-[storage_pub]: https://pub.dartlang.org/packages/firebase_storage
-[storage_product]: https://firebase.google.com/products/storage/
-[storage_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage
-[storage_badge]: https://img.shields.io/pub/v/firebase_storage.svg
+## Using banners and interstitials
+Banner and interstitial ads can be configured with target information.
+And in the example below, the ads are given test ad unit IDs for a quick start.
 
-## Issues
+```dart
+MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  keywords: <String>['flutterio', 'beautiful apps'],
+  contentUrl: 'https://flutter.io',
+  birthday: DateTime.now(),
+  childDirected: false,
+  designedForFamilies: false,
+  gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+  testDevices: <String>[], // Android emulators are considered test devices
+);
 
-Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+BannerAd myBanner = BannerAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: BannerAd.testAdUnitId,
+  size: AdSize.smartBanner,
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("BannerAd event is $event");
+  },
+);
 
-Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+InterstitialAd myInterstitial = InterstitialAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: InterstitialAd.testAdUnitId,
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("InterstitialAd event is $event");
+  },
+);
+```
 
-## Contributing
+Ads must be loaded before they're shown.
+```dart
+myBanner
+  // typically this happens well before the ad is shown
+  ..load()
+  ..show(
+    // Positions the banner ad 60 pixels from the bottom of the screen
+    anchorOffset: 60.0,
+    // Positions the banner ad 10 pixels from the center of the screen to the right
+    horizontalCenterOffset: 10.0,
+    // Banner Position
+    anchorType: AnchorType.bottom,
+  );
+```
 
-If you wish to contribute a change to any of the existing plugins in this repo,
+```dart
+myInterstitial
+  ..load()
+  ..show(
+    anchorType: AnchorType.bottom,
+    anchorOffset: 0.0,
+    horizontalCenterOffset: 0.0,
+  );
+```
+
+`BannerAd` and `InterstitialAd` objects can be disposed to free up plugin
+resources. Disposing a banner ad that's been shown removes it from the screen.
+Interstitial ads, however, can't be programmatically removed from view.
+
+Banner and interstitial ads can be created with a `MobileAdEvent` listener. The
+listener can be used to detect when the ad has actually finished loading
+(or failed to load at all).
+
+## Using rewarded video ads
+
+Unlike banners and interstitials, rewarded video ads are loaded one at a time
+via a singleton object, `RewardedVideoAd.instance`. Its `load` method takes an
+AdMob ad unit ID and an instance of `MobileAdTargetingInfo`:
+```dart
+RewardedVideoAd.instance.load(myAdMobAdUnitId, targetingInfo);
+```
+
+To listen for events in the rewarded video ad lifecycle, apps can define a
+function matching the `RewardedVideoAdListener` typedef, and assign it to the
+`listener` instance variable in `RewardedVideoAd`. If set, the `listener`
+function will be invoked whenever one of the events in the `RewardedVideAdEvent`
+enum occurs. After a rewarded video ad loads, for example, the
+`RewardedVideoAdEvent.loaded` is sent. Any time after that, apps can show the ad
+by calling `show`:
+```dart
+RewardedVideoAd.instance.show();
+```
+
+When the AdMob SDK decides it's time to grant an in-app reward, it does so via
+the `RewardedVideoAdEvent.rewarded` event:
+```dart
+RewardedVideoAd.instance.listener =
+    (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
+  if (event == RewardedVideoAdEvent.rewarded) {
+    setState(() {
+      // Here, apps should update state to reflect the reward.
+      _goldCoins += rewardAmount;
+    });
+  }
+};
+```
+
+Because `RewardedVideoAd` is a singleton object, it does not offer a `dispose`
+method.
+
+## Limitations
+
+This plugin currently has some limitations:
+
+- Banner ads cannot be animated into view.
+- It's not possible to specify a banner ad's size.
+- There's no support for native ads.
+- The existing tests are fairly rudimentary.
+- There is no API doc.
+- The example should demonstrate how to show gate a route push with an
+  interstitial ad
+
+## Issues and feedback
+
+Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
 and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
-
